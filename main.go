@@ -1,13 +1,11 @@
 package main
 
 import (
-	"context"
-	"encoding/json"
 	"log"
 	"net/http"
 	"payment-hub-mock/business"
 	"payment-hub-mock/external"
-	"payment-hub-mock/transport"
+	"payment-hub-mock/serializable"
 
 	httptransport "github.com/go-kit/kit/transport/http"
 )
@@ -17,43 +15,31 @@ func main() {
 
 	captureHandler := httptransport.NewServer(
 		external.MakeCaptureEndpoint(paymentService),
-		decodeCaptureRequest,
-		encodeCaptureResponse,
+		serializable.DecodeCaptureRequest,
+		serializable.EncodeCaptureResponse,
 	)
 
 	authorizeHandler := httptransport.NewServer(
 		external.MakeAuthorizationEndpoint(paymentService),
-		decodeAuthorizeRequest,
-		encodeAuthorizeResponse,
+		serializable.DecodeAuthorizeRequest,
+		serializable.EncodeAuthorizeResponse,
+	)
+
+	cancelHandler := httptransport.NewServer(
+		external.MakeCancelEndpoint(paymentService),
+		serializable.DecodeCancelRequest,
+		serializable.EncodeCancelResponse,
+	)
+
+	searchHandler := httptransport.NewServer(
+		external.MakeSearchEndpoint(paymentService),
+		serializable.DecodeSearchRequest,
+		serializable.EncodeSearchResponse,
 	)
 
 	http.Handle("/capture", captureHandler)
 	http.Handle("/authorize", authorizeHandler)
+	http.Handle("/cancel", cancelHandler)
+	http.Handle("/search", searchHandler)
 	log.Fatal(http.ListenAndServe(":8080", nil))
-}
-
-//capture
-func decodeCaptureRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var request transport.CaptureRequest
-	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		return nil, err
-	}
-	return request, nil
-}
-
-func encodeCaptureResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
-	return json.NewEncoder(w).Encode(response)
-}
-
-//authorize
-func decodeAuthorizeRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var request transport.AuthorizeRequest
-	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		return nil, err
-	}
-	return request, nil
-}
-
-func encodeAuthorizeResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
-	return json.NewEncoder(w).Encode(response)
 }

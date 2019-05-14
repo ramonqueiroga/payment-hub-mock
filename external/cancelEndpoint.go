@@ -23,7 +23,7 @@ func MakeCancelEndpoint(ps business.PaymentService) endpoint.Endpoint {
 
 		return transport.CancelResponse{
 			TransactionModel: transModel,
-			Error:            errCancelPayment.Error(),
+			Error:            "",
 		}, nil
 	}
 }
