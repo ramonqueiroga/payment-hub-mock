@@ -1,6 +1,13 @@
 package transport
 
-import "payment-hub-mock/business"
+import (
+	"context"
+	"encoding/json"
+	"net/http"
+	"payment-hub-mock/business"
+
+	"github.com/gorilla/mux"
+)
 
 //SearchRequest is the model to consumem the search transcation service
 type SearchRequest struct {
@@ -11,4 +18,21 @@ type SearchRequest struct {
 type SearchResponse struct {
 	TransactionModel business.TransactionModel `json:"transactionModel"`
 	Error            string                    `json:"error"`
+}
+
+//DecodeSearchRequest creates the cancel decode request
+func DecodeSearchRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	vars := mux.Vars(r)
+	id, ok := vars["payment_id"]
+
+	if !ok {
+		return nil, errBadRouting
+	}
+
+	return SearchRequest{PaymentID: id}, nil
+}
+
+//EncodeSearchResponse creates the cancel encode response
+func EncodeSearchResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
+	return json.NewEncoder(w).Encode(response)
 }

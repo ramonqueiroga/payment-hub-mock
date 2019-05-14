@@ -5,41 +5,45 @@ import (
 	"net/http"
 	"payment-hub-mock/business"
 	"payment-hub-mock/external"
-	"payment-hub-mock/serializable"
+	"payment-hub-mock/transport"
+
+	"github.com/gorilla/mux"
 
 	httptransport "github.com/go-kit/kit/transport/http"
 )
 
 func main() {
 	paymentService := business.PaymentServiceImpl{}
-
-	captureHandler := httptransport.NewServer(
-		external.MakeCaptureEndpoint(paymentService),
-		serializable.DecodeCaptureRequest,
-		serializable.EncodeCaptureResponse,
-	)
+	router := mux.NewRouter()
+	router = router.PathPrefix("/v1/payment/creditcard").Subrouter()
 
 	authorizeHandler := httptransport.NewServer(
 		external.MakeAuthorizationEndpoint(paymentService),
-		serializable.DecodeAuthorizeRequest,
-		serializable.EncodeAuthorizeResponse,
+		transport.DecodeAuthorizeRequest,
+		transport.EncodeAuthorizeResponse,
+	)
+
+	captureHandler := httptransport.NewServer(
+		external.MakeCaptureEndpoint(paymentService),
+		transport.DecodeCaptureRequest,
+		transport.EncodeCaptureResponse,
 	)
 
 	cancelHandler := httptransport.NewServer(
 		external.MakeCancelEndpoint(paymentService),
-		serializable.DecodeCancelRequest,
-		serializable.EncodeCancelResponse,
+		transport.DecodeCancelRequest,
+		transport.EncodeCancelResponse,
 	)
 
 	searchHandler := httptransport.NewServer(
 		external.MakeSearchEndpoint(paymentService),
-		serializable.DecodeSearchRequest,
-		serializable.EncodeSearchResponse,
+		transport.DecodeSearchRequest,
+		transport.EncodeSearchResponse,
 	)
 
-	http.Handle("/capture", captureHandler)
-	http.Handle("/authorize", authorizeHandler)
-	http.Handle("/cancel", cancelHandler)
-	http.Handle("/search", searchHandler)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	router.Methods("POST").Handler(authorizeHandler)
+	router.Methods("PUT").Path("/{payment_id}/capture").Handler(captureHandler)
+	router.Methods("DELETE").Path("/{payment_id}").Handler(cancelHandler)
+	router.Methods("GET").Path("/{payment_id}").Handler(searchHandler)
+	log.Fatal(http.ListenAndServe(":8080", router))
 }
