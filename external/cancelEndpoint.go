@@ -13,17 +13,17 @@ import (
 func MakeCancelEndpoint(ps business.PaymentService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req := request.(transport.CancelRequest)
-		transModel, err := ps.Cancel(req.PaymentID)
+		trans, err := ps.Cancel(req.PaymentID)
 		if err != nil {
 			return transport.CancelResponse{
-				TransactionModel: business.TransactionModel{},
-				Error:            errCancelPayment.Error(),
+				Transaction: business.Transaction{},
+				Error:       errCancelPayment.Error(),
 			}, nil
 		}
 
 		return transport.CancelResponse{
-			TransactionModel: transModel,
-			Error:            "",
+			Transaction: trans,
+			Error:       "",
 		}, nil
 	}
 }

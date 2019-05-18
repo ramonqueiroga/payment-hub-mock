@@ -14,8 +14,8 @@ type AuthorizeRequest struct {
 
 //AuthorizeResponse is the model that responses the authorization service
 type AuthorizeResponse struct {
-	TransactionModel business.TransactionModel `json:"transactionModel"`
-	Error            string                    `json:"error"`
+	Transaction business.Transaction `json:"transaction"`
+	Error       string               `json:"error"`
 }
 
 //DecodeAuthorizeRequest creates the authorize decode request

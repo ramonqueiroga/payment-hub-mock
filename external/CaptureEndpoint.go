@@ -13,18 +13,19 @@ import (
 func MakeCaptureEndpoint(ps business.PaymentService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req := request.(transport.CaptureRequest)
-		transModel, err := ps.Capture(req.Payments)
+		trans, err := ps.Capture(req.Payments)
 
+		//aqui depois da captura, precisamos persistir no banco
 		if err != nil {
 			return transport.CaptureResponse{
-				TransactionModel: business.TransactionModel{},
-				Error:            errCapturePayment.Error(),
+				Transaction: business.Transaction{},
+				Error:       errCapturePayment.Error(),
 			}, nil
 		}
 
 		return transport.CaptureResponse{
-			TransactionModel: transModel,
-			Error:            "",
+			Transaction: trans,
+			Error:       "",
 		}, nil
 	}
 }

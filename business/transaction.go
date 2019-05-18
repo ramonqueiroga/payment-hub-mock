@@ -1,8 +1,8 @@
 package business
 
 // Transaction ....
-type TransactionModel struct {
-	PaymentID      string  `gorm:"primary_key" json:"payment_id"`
+type Transaction struct {
+	PaymentID      string  `json:"payment_id"`
 	Amount         float64 `json:"amount"`
 	Backend        string  `json:"backend"`
 	Status         string  `json:"status"`

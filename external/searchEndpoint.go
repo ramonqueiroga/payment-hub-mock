@@ -13,18 +13,18 @@ import (
 func MakeSearchEndpoint(ps business.PaymentService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req := request.(transport.SearchRequest)
-		transModel, err := ps.Search(req.PaymentID)
+		trans, err := ps.Search(req.PaymentID)
 
 		if err != nil {
 			return transport.SearchResponse{
-				TransactionModel: business.TransactionModel{},
-				Error:            errSearchPayment.Error(),
+				Transaction: business.Transaction{},
+				Error:       errSearchPayment.Error(),
 			}, nil
 		}
 
 		return transport.SearchResponse{
-			TransactionModel: transModel,
-			Error:            "",
+			Transaction: trans,
+			Error:       "",
 		}, nil
 	}
 }

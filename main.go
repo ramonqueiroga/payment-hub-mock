@@ -12,12 +12,20 @@ import (
 	"github.com/go-kit/kit/log"
 	httptransport "github.com/go-kit/kit/transport/http"
 	"github.com/gorilla/mux"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
 func main() {
 	router := mux.NewRouter()
 	router = router.PathPrefix("/v1/payment/creditcard").Subrouter()
 	logger := log.NewLogfmtLogger(os.Stderr)
+
+	db, err := gorm.Open("sqlite3", "test.db")
+	if err != nil {
+		panic("failed to connect database")
+	}
+	defer db.Close()
 
 	var paymentService business.PaymentService
 	paymentService = business.PaymentServiceImpl{}

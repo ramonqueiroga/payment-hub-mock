@@ -16,8 +16,8 @@ type CancelRequest struct {
 
 //CancelResponse is the model that responses the cancelation service
 type CancelResponse struct {
-	TransactionModel business.TransactionModel `json:"transactionModel"`
-	Error            string                    `json:"error"`
+	Transaction business.Transaction `json:"transaction"`
+	Error       string               `json:"error"`
 }
 
 //DecodeCancelRequest creates the cancel decode request

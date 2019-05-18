@@ -14,7 +14,7 @@ type LoggerMiddleware struct {
 }
 
 //Capture logs the business logic of the capture payment service
-func (lm LoggerMiddleware) Capture(p business.Payments) (transaction business.TransactionModel, err error) {
+func (lm LoggerMiddleware) Capture(p business.Payments) (transaction business.Transaction, err error) {
 	defer func(begin time.Time) {
 		lm.Logger.Log(
 			"service", "capture",
@@ -30,7 +30,7 @@ func (lm LoggerMiddleware) Capture(p business.Payments) (transaction business.Tr
 }
 
 //Authorize logs the business logic of the authorize payment service
-func (lm LoggerMiddleware) Authorize(s string) (transaction business.TransactionModel, err error) {
+func (lm LoggerMiddleware) Authorize(s string) (transaction business.Transaction, err error) {
 	defer func(begin time.Time) {
 		lm.Logger.Log(
 			"service", "authorize",
@@ -46,7 +46,7 @@ func (lm LoggerMiddleware) Authorize(s string) (transaction business.Transaction
 }
 
 //Cancel logs the business logic of the cancel payment service
-func (lm LoggerMiddleware) Cancel(s string) (transaction business.TransactionModel, err error) {
+func (lm LoggerMiddleware) Cancel(s string) (transaction business.Transaction, err error) {
 	defer func(begin time.Time) {
 		lm.Logger.Log(
 			"service", "cancel",
@@ -62,7 +62,7 @@ func (lm LoggerMiddleware) Cancel(s string) (transaction business.TransactionMod
 }
 
 //Search logs the business logic of the search payment service
-func (lm LoggerMiddleware) Search(s string) (transaction business.TransactionModel, err error) {
+func (lm LoggerMiddleware) Search(s string) (transaction business.Transaction, err error) {
 	defer func(begin time.Time) {
 		lm.Logger.Log(
 			"service", "search",

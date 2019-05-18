@@ -16,8 +16,8 @@ type SearchRequest struct {
 
 //SearchResponse is the model that responses the searching transaction service
 type SearchResponse struct {
-	TransactionModel business.TransactionModel `json:"transactionModel"`
-	Error            string                    `json:"error"`
+	Transaction business.Transaction `json:"transaction"`
+	Error       string               `json:"error"`
 }
 
 //DecodeSearchRequest creates the cancel decode request

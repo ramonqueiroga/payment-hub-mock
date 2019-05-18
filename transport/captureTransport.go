@@ -14,8 +14,8 @@ type CaptureRequest struct {
 
 //CaptureResponse is the model that returns in the capture service
 type CaptureResponse struct {
-	TransactionModel business.TransactionModel `json:"transactionModel"`
-	Error            string                    `json:"error"`
+	Transaction business.Transaction `json:"transaction"`
+	Error       string               `json:"error"`
 }
 
 //DecodeCaptureRequest create the decode for the capture request
