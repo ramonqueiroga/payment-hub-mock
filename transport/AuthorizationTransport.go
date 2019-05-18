@@ -9,7 +9,7 @@ import (
 
 //AuthorizeRequest authorize request object to transport authorize request message
 type AuthorizeRequest struct {
-	PaymentID string `json:"paymentID"`
+	Payments business.Payments `json:"payments"`
 }
 
 //AuthorizeResponse is the model that responses the authorization service

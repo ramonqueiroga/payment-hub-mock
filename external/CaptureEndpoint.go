@@ -5,6 +5,7 @@ import (
 	"errors"
 	"payment-hub-mock/business"
 	"payment-hub-mock/transport"
+	"strconv"
 
 	"github.com/go-kit/kit/endpoint"
 )
@@ -13,7 +14,13 @@ import (
 func MakeCaptureEndpoint(ps business.PaymentService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req := request.(transport.CaptureRequest)
-		trans, err := ps.Capture(req.Payments)
+
+		paymentID, err := strconv.ParseUint(req.PaymentID, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+
+		trans, err := ps.Capture(paymentID)
 
 		//aqui depois da captura, precisamos persistir no banco
 		if err != nil {

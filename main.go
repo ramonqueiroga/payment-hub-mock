@@ -6,6 +6,7 @@ import (
 	"payment-hub-mock/business"
 	"payment-hub-mock/external"
 	"payment-hub-mock/logging"
+	"payment-hub-mock/repository"
 	"payment-hub-mock/transport"
 
 	"github.com/go-kit/kit/endpoint"
@@ -28,7 +29,8 @@ func main() {
 	defer db.Close()
 
 	var paymentService business.PaymentService
-	paymentService = business.PaymentServiceImpl{}
+	transactionRepository := repository.TransactionRepository{Db: db}
+	paymentService = business.PaymentServiceImpl{Repository: transactionRepository}
 	paymentService = logging.LoggerMiddleware{Logger: logger, Next: paymentService}
 
 	var authorize endpoint.Endpoint

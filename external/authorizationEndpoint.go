@@ -13,7 +13,7 @@ import (
 func MakeAuthorizationEndpoint(ps business.PaymentService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req := request.(transport.AuthorizeRequest)
-		trans, err := ps.Authorize(req.PaymentID)
+		trans, err := ps.Authorize(req.Payments)
 
 		if err != nil {
 			return transport.AuthorizeResponse{

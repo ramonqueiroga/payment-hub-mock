@@ -13,66 +13,66 @@ type LoggerMiddleware struct {
 	Next   business.PaymentService
 }
 
-//Capture logs the business logic of the capture payment service
-func (lm LoggerMiddleware) Capture(p business.Payments) (transaction business.Transaction, err error) {
-	defer func(begin time.Time) {
-		lm.Logger.Log(
-			"service", "capture",
-			"input", p,
-			"output", transaction.PaymentID,
-			"err", err,
-			"took", time.Since(begin),
-		)
-	}(time.Now())
-
-	transaction, err = lm.Next.Capture(p)
-	return
-}
-
 //Authorize logs the business logic of the authorize payment service
-func (lm LoggerMiddleware) Authorize(s string) (transaction business.Transaction, err error) {
+func (lm LoggerMiddleware) Authorize(payments business.Payments) (transaction business.Transaction, err error) {
 	defer func(begin time.Time) {
 		lm.Logger.Log(
 			"service", "authorize",
-			"input", s,
+			"input", payments,
 			"output", transaction.PaymentID,
 			"err", err,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
 
-	transaction, err = lm.Next.Authorize(s)
+	transaction, err = lm.Next.Authorize(payments)
+	return
+}
+
+//Capture logs the business logic of the capture payment service
+func (lm LoggerMiddleware) Capture(PaymentID uint64) (transaction business.Transaction, err error) {
+	defer func(begin time.Time) {
+		lm.Logger.Log(
+			"service", "capture",
+			"input", PaymentID,
+			"output", transaction.PaymentID,
+			"err", err,
+			"took", time.Since(begin),
+		)
+	}(time.Now())
+
+	transaction, err = lm.Next.Capture(PaymentID)
 	return
 }
 
 //Cancel logs the business logic of the cancel payment service
-func (lm LoggerMiddleware) Cancel(s string) (transaction business.Transaction, err error) {
+func (lm LoggerMiddleware) Cancel(p uint64) (transaction business.Transaction, err error) {
 	defer func(begin time.Time) {
 		lm.Logger.Log(
 			"service", "cancel",
-			"input", s,
+			"input", p,
 			"output", transaction,
 			"err", err,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
 
-	transaction, err = lm.Next.Cancel(s)
+	transaction, err = lm.Next.Cancel(p)
 	return
 }
 
 //Search logs the business logic of the search payment service
-func (lm LoggerMiddleware) Search(s string) (transaction business.Transaction, err error) {
+func (lm LoggerMiddleware) Search(p uint64) (transaction business.Transaction, err error) {
 	defer func(begin time.Time) {
 		lm.Logger.Log(
 			"service", "search",
-			"input", s,
+			"input", p,
 			"output", transaction,
 			"err", err,
 			"took", time.Since(begin),
 		)
 	}(time.Now())
 
-	transaction, err = lm.Next.Search(s)
+	transaction, err = lm.Next.Search(p)
 	return
 }

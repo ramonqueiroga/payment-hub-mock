@@ -9,7 +9,7 @@ import (
 
 //CaptureRequest is the model for consume the capture service
 type CaptureRequest struct {
-	Payments business.Payments `json:"payments"`
+	PaymentID string `json:"paymentID"`
 }
 
 //CaptureResponse is the model that returns in the capture service

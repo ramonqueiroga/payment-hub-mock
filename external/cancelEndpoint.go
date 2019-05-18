@@ -5,6 +5,7 @@ import (
 	"errors"
 	"payment-hub-mock/business"
 	"payment-hub-mock/transport"
+	"strconv"
 
 	"github.com/go-kit/kit/endpoint"
 )
@@ -13,7 +14,13 @@ import (
 func MakeCancelEndpoint(ps business.PaymentService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req := request.(transport.CancelRequest)
-		trans, err := ps.Cancel(req.PaymentID)
+
+		paymentID, err := strconv.ParseUint(req.PaymentID, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+
+		trans, err := ps.Cancel(paymentID)
 		if err != nil {
 			return transport.CancelResponse{
 				Transaction: business.Transaction{},
