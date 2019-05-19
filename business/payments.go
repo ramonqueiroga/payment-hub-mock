@@ -11,7 +11,6 @@ type Payments struct {
 			ExpirationMonth int    `json:"expiration_month"`
 			ExpirationYear  int    `json:"expiration_year"`
 			Holder          string `json:"holder"`
-			SecurityCode    string `json:"security_code"`
 			SoftDescriptor  string `json:"soft_descriptor"`
 		} `json:"credit_card"`
 		Installments int    `json:"installments"`

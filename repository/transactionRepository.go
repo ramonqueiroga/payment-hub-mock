@@ -2,8 +2,10 @@ package repository
 
 import (
 	"fmt"
+	"math/rand"
 	"payment-hub-mock/business"
 	"payment-hub-mock/model"
+	"time"
 
 	"github.com/jinzhu/gorm"
 )
@@ -15,28 +17,31 @@ type TransactionRepository struct {
 
 //Save transcation model implementation
 func (tr TransactionRepository) Save(p business.Payments) (bool, error) {
-	fmt.Print("p", p)
+	s1 := rand.NewSource(time.Now().UnixNano())
+	r1 := rand.New(s1)
 
+	paymentID := fmt.Sprintf("%s%d", "10000", r1)
 	transModel := model.TransactionModel{
-		PaymentID: "1",
-		Amount:    1.0,
-		Status:    "CAPTURADO",
+		PaymentID:    paymentID,
+		Amount:       p.Payments[0].Amount,
+		Status:       "AUTHORIZE",
+		Installments: p.Payments[0].Installments,
 	}
 
 	tr.Db.AutoMigrate(&model.TransactionModel{})
-	tr.Db.Create(&transModel)
 
-	var findTransModel model.TransactionModel
-	tr.Db.First(&findTransModel, 1)
+	fmt.Println("saving transaction model", transModel)
+	tr.Db.Save(&transModel)
 
-	fmt.Print("paymentId", findTransModel.PaymentID)
 	return true, nil
 }
 
 //FindOne transcation model implementation
 func (tr TransactionRepository) FindOne(id uint64) (interface{}, error) {
 	var findTransModel model.TransactionModel
-	tr.Db.First(&findTransModel, 1)
+	tr.Db.Where("ID = ?", id).First(&findTransModel)
+
+	fmt.Println("finding", findTransModel)
 	return findTransModel, nil
 }
 

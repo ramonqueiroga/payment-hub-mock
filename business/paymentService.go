@@ -1,6 +1,9 @@
 package business
 
-import "payment-hub-mock/model"
+import (
+	"fmt"
+	"payment-hub-mock/model"
+)
 
 //PaymentServiceImpl is the implementation of the busines,s logic
 type PaymentServiceImpl struct {
@@ -34,6 +37,7 @@ func (ps PaymentServiceImpl) Capture(paymentID uint64) (Transaction, error) {
 		return Transaction{}, err
 	}
 
+	fmt.Println("aquii", resp)
 	transModel := resp.(model.TransactionModel)
 
 	return Transaction{

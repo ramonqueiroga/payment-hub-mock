@@ -7,7 +7,8 @@ import (
 //TransactionModel define the database transaction that contains the payment information
 type TransactionModel struct {
 	gorm.Model
-	PaymentID string  `json:"payment_id"`
-	Amount    float64 `json:"amount"`
-	Status    string  `json:"status"`
+	PaymentID    string  `json:"payment_id"`
+	Amount       float64 `json:"amount"`
+	Status       string  `json:"status"`
+	Installments int     `json:"installments"`
 }

@@ -22,7 +22,6 @@ func MakeCaptureEndpoint(ps business.PaymentService) endpoint.Endpoint {
 
 		trans, err := ps.Capture(paymentID)
 
-		//aqui depois da captura, precisamos persistir no banco
 		if err != nil {
 			return transport.CaptureResponse{
 				Transaction: business.Transaction{},
